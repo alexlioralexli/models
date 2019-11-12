@@ -38,8 +38,10 @@ class AntEnv(mujoco_env.MujocoEnv, utils.EzPickle):
   FILE = "ant.xml"
   ORI_IND = 3
 
-  def __init__(self, file_path=None, expose_all_qpos=True,
-               expose_body_coms=None, expose_body_comvels=None):
+  def __init__(self, file_path='~/workspace/models/research/efficient-hrl/environments/assets/ant.xml',
+               expose_all_qpos=False,  #todo: this was True
+               expose_body_coms=None,
+               expose_body_comvels=None):
     self._expose_all_qpos = expose_all_qpos
     self._expose_body_coms = expose_body_coms
     self._expose_body_comvels = expose_body_comvels
@@ -108,6 +110,9 @@ class AntEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         obs = np.concatenate([obs, comvel])
     return obs
 
+  def get_current_obs(self):
+    return self._get_obs()
+
   def reset_model(self):
     qpos = self.init_qpos + self.np_random.uniform(
         size=self.model.nq, low=-.1, high=.1)
@@ -139,3 +144,8 @@ class AntEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
   def get_xy(self):
     return self.physics.data.qpos[:2]
+
+
+if __name__ == "__main__":
+  env = AntEnv("/home/alexli/workspace/models/research/efficient-hrl/environments/assets/ant.xml")
+  import ipdb; ipdb.set_trace()
